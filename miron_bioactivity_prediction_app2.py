@@ -20,6 +20,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.image("logo.jpg", width=100)
 st.image("drug_discovery1.jpg", use_container_width=True)
 
 st.markdown(""" - App built in `Python` + `Streamlit` by Miron Shah --- """, unsafe_allow_html=True)
