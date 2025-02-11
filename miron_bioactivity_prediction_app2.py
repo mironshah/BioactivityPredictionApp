@@ -12,7 +12,7 @@ st.set_page_config(page_title="CholinEase - Bioactivity Prediction App", layout=
 st.markdown(
     """
     <div style='text-align: center;'>
-        <img src='logo.png' width='100'>
+        <img src='logo.jpg' width='100'>
         <h1 style='display: inline; font-size: 50px; color: #4CAF50; vertical-align: middle;'>CholinEase</h1>
     </div>
     <h3 style='text-align: center; color: #666;'>Bioactivity Prediction App</h3>
