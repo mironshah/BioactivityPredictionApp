@@ -97,5 +97,48 @@ def build_model(input_data, manual_data):
 
 # ✅ User Input Section
 smiles_input = st.text_area(
-    "Please enter SMILES n
+    "Please enter SMILES notations below (One per Line, Up to 100 Compounds)",
+    height=250,
+    placeholder="e.g. C1CCCCC1\nCC(=O)O\nO=C(C)O"
+)
+
+if st.button("Predict"):
+    if not java_installed:
+        st.error("❌ Java is not installed. Install Java and restart the app.")
+    elif smiles_input:
+        smiles_list = smiles_input.strip().split('\n')[:100]
+        if len(smiles_list) > 0:
+            manual_data = pd.DataFrame({'smiles': smiles_list})
+
+            with st.spinner("Predicting..."):
+                with open('molecule.smi', 'w') as f:
+                    f.write('\n'.join(smiles_list))
+                
+                desc_calc()
+
+                # ✅ Check if descriptor files exist before proceeding
+                descriptor_files = [
+                    'PubChem_app_data.csv',
+                    'KlekotaRoth_app_data.csv',
+                    'CDKextended_app_data.csv'
+                ]
+                
+                if not all(os.path.exists(f) for f in descriptor_files):
+                    st.error("❌ Descriptor files are missing! Ensure PaDEL-Descriptor ran correctly.")
+                else:
+                    descriptors = pd.concat([pd.read_csv(file) for file in descriptor_files], axis=1)
+                    descriptors.to_csv("Combined_PubChem_CDK_Klekota_app_data.csv", index=False)
+
+                    desc = pd.read_csv('Combined_PubChem_CDK_Klekota_app_data.csv')
+                    try:
+                        Xlist = list(pd.read_csv('Combined_PubChem_CDK_Klekota_modified.csv').columns)
+                        desc_subset = desc[Xlist]
+                        build_model(desc_subset, manual_data)
+                    except FileNotFoundError:
+                        st.error("❌ Descriptor reference file is missing! Ensure it is in the correct directory.")
+        else:
+            st.warning("⚠️ Please enter at least one SMILES notation.")
+    else:
+        st.warning("⚠️ Please enter SMILES strings to start the prediction!")
+
 
