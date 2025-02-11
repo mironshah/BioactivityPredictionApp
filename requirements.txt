@@ -1,4 +1,3 @@
-openjdk-8-jdk
 pandas
 numpy
 scikit-learn
