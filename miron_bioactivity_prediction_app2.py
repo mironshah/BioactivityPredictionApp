@@ -6,9 +6,6 @@ import pandas as pd
 import streamlit as st
 from padelpy import padeldescriptor
 
-os.environ["JAVA_HOME"] = r"C:\Program Files\Java\jdk1.8.0_101"
-os.environ["PATH"] += os.pathsep + os.path.join(os.environ["JAVA_HOME"], "bin")
-
 # ✅ Set Streamlit Page Config
 st.set_page_config(page_title="CholinEase - Bioactivity Prediction App", layout="centered")
 
@@ -30,17 +27,25 @@ st.header("Predict pIC50")
 
 # ✅ Function to Check Java Installation
 def check_java():
-    java_path = subprocess.getoutput("where java").strip()
-    if "not found" in java_path.lower() or not java_path:
-        st.error("❌ Java not found! Install Java and restart the app.")
+    try:
+        java_path = subprocess.getoutput("where java").strip() if os.name == "nt" else subprocess.getoutput("which java").strip()
+        if "not found" in java_path.lower() or not java_path:
+            st.error("❌ Java not found! Install Java and restart the app.")
+            return False
+        
+        java_version = subprocess.getoutput("java -version")
+        st.success(f"✅ Java detected: {java_path}")
+        st.write(f"Java Version: {java_version}")
+
+        # ✅ Dynamically Set JAVA_HOME
+        java_home = os.path.dirname(os.path.dirname(java_path))
+        os.environ["JAVA_HOME"] = java_home
+        os.environ["PATH"] += os.pathsep + os.path.join(java_home, "bin")
+
+        return True
+    except Exception as e:
+        st.error(f"❌ Java check failed: {e}")
         return False
-    
-    java_home = os.path.dirname(os.path.dirname(java_path))
-    os.environ["JAVA_HOME"] = java_home
-    os.environ["PATH"] += os.pathsep + os.path.join(java_home, "bin")
-    
-    st.success(f"✅ Java detected: {java_home}")
-    return True
 
 java_installed = check_java()
 
@@ -144,3 +149,4 @@ if st.button("Predict"):
             st.warning("⚠️ Please enter at least one SMILES notation.")
     else:
         st.warning("⚠️ Please enter SMILES strings to start the prediction!")
+
