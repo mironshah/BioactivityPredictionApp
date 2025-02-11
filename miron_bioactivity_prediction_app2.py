@@ -11,25 +11,31 @@ st.set_page_config(page_title="CholinEase - Bioactivity Prediction App", layout=
 
 st.markdown(
     """
-    <div style='text-align: center;'>
-        <img src='logo.jpg' width='100'>
-        <h1 style='display: inline; font-size: 50px; color: #4CAF50; vertical-align: middle;'>CholinEase</h1>
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <img src="data:image/jpeg;base64,{logo}" style="height: 50px; margin-right: 10px;">
+        <h1 style='font-size: 50px; color: #4CAF50; margin: 0;'>CholinEase</h1>
     </div>
     <h3 style='text-align: center; color: #666;'>Bioactivity Prediction App</h3>
-    """, 
+    """.format(logo=base64.b64encode(open("logo.jpg", "rb").read()).decode()), 
     unsafe_allow_html=True
 )
 
-st.image("logo.jpg", width=100)
 st.image("drug_discovery1.jpg", use_container_width=True)
 
-st.markdown(""" - App built in `Python` + `Streamlit` by Miron Shah --- """, unsafe_allow_html=True)
+st.markdown(""" 
+- App built in `Python` + `Streamlit` by Miron Shah
+--- 
+""", unsafe_allow_html=True)
 
 st.header("Predict pIC50")
 
 def desc_calc():
     fingerprints = ['PubChem', 'KlekotaRoth', 'CDKextended']
-    fingerprint_descriptortypes = ['PubchemFingerprinter.xml', 'KlekotaRothFingerprinter.xml', 'ExtendedFingerprinter.xml']
+    fingerprint_descriptortypes = [
+        'PubchemFingerprinter.xml',
+        'KlekotaRothFingerprinter.xml',
+        'ExtendedFingerprinter.xml'
+    ]
     output_files = {fp: f"{fp}_app_data.csv" for fp in fingerprints}
     
     for fp, xml_file in zip(fingerprints, fingerprint_descriptortypes):
@@ -49,7 +55,8 @@ def desc_calc():
 def filedownload(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()  
-    return f'<a href="data:file/csv;base64,{b64}" download="prediction.csv">Download Predictions</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="prediction.csv">Download Predictions</a>'
+    return href
 
 def build_model(input_data, manual_data):
     load_model = pickle.load(open('acetylcholinesterase_model.pkl', 'rb'))
@@ -62,7 +69,11 @@ def build_model(input_data, manual_data):
     st.write(df)
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
-smiles_input = st.text_area("Please enter SMILES notations below (One per Line, Up to 100 Compounds)", height=250, placeholder="e.g. C1CCCCC1\nCC(=O)O\nO=C(C)O")
+smiles_input = st.text_area(
+    "Please enter SMILES notations below (One per Line, Up to 100 Compounds)",
+    height=250,
+    placeholder="e.g. C1CCCCC1\nCC(=O)O\nO=C(C)O"
+)
 
 if st.button("Predict"):
     if smiles_input:
@@ -73,9 +84,14 @@ if st.button("Predict"):
                 with open('molecule.smi', 'w') as f:
                     f.write('\n'.join(smiles_list))
                 desc_calc()
-                descriptors_to_combine = ['PubChem_app_data.csv', 'KlekotaRoth_app_data.csv', 'CDKextended_app_data.csv']
+                descriptors_to_combine = [
+                    'PubChem_app_data.csv',
+                    'KlekotaRoth_app_data.csv',
+                    'CDKextended_app_data.csv'
+                ]
                 descriptors = pd.concat([pd.read_csv(file) for file in descriptors_to_combine], axis=1)
                 descriptors.to_csv("Combined_PubChem_CDK_Klekota_app_data.csv", index=False)
                 desc = pd.read_csv('Combined_PubChem_CDK_Klekota_app_data.csv')  
                 Xlist = list(pd.read_csv('Combined_PubChem_CDK_Klekota_modified.csv').columns)
                 desc_subset = desc[Xlist]
+
