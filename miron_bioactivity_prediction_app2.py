@@ -7,16 +7,14 @@ import streamlit as st
 from padelpy import padeldescriptor
 import requests
 
+# App Header with Stylish Title
 st.set_page_config(page_title="CholinEase - Bioactivity Prediction App", layout="centered")
 
 st.markdown(
     """
-    <div style="display: flex; align-items: center; justify-content: center;">
-        <img src="data:image/jpeg;base64,{logo}" style="height: 50px; margin-right: 10px;">
-        <h1 style='font-size: 50px; color: #4CAF50; margin: 0;'>CholinEase</h1>
-    </div>
+    <h1 style='text-align: center; font-size: 50px; color: #4CAF50;'>CholinEase</h1>
     <h3 style='text-align: center; color: #666;'>Bioactivity Prediction App</h3>
-    """.format(logo=base64.b64encode(open("logo.jpg", "rb").read()).decode()), 
+    """, 
     unsafe_allow_html=True
 )
 
@@ -39,6 +37,7 @@ def desc_calc():
     output_files = {fp: f"{fp}_app_data.csv" for fp in fingerprints}
     
     for fp, xml_file in zip(fingerprints, fingerprint_descriptortypes):
+        print(f"Generating descriptors for: {fp}")
         padeldescriptor(
             mol_dir='molecule.smi',  
             d_file=output_files[fp],  
@@ -51,6 +50,7 @@ def desc_calc():
             log=True,
             fingerprints=True
         )
+        print(f"{fp} descriptors saved in: {output_files[fp]}")
 
 def filedownload(df):
     csv = df.to_csv(index=False)
@@ -60,12 +60,16 @@ def filedownload(df):
 
 def build_model(input_data, manual_data):
     load_model = pickle.load(open('acetylcholinesterase_model.pkl', 'rb'))
+    
     prediction = load_model.predict(input_data)
     st.header('**Predicted Output**')
+    
     prediction_output = pd.Series(prediction, name='pIC50')
     notation = pd.Series(manual_data['smiles'], name='SMILES Notation')
     df = pd.concat([notation, prediction_output], axis=1)
+    
     df.index = df.index + 1
+    
     st.write(df)
     st.markdown(filedownload(df), unsafe_allow_html=True)
 
@@ -79,11 +83,15 @@ if st.button("Predict"):
     if smiles_input:
         smiles_list = smiles_input.strip().split('\n')[:100]  
         if len(smiles_list) > 0:
-            manual_data = pd.DataFrame({'smiles': smiles_list})
+            manual_data = pd.DataFrame({
+                'smiles': smiles_list
+            })
+            
             with st.spinner("Predicting..."):
                 with open('molecule.smi', 'w') as f:
                     f.write('\n'.join(smiles_list))
                 desc_calc()
+                
                 descriptors_to_combine = [
                     'PubChem_app_data.csv',
                     'KlekotaRoth_app_data.csv',
@@ -91,6 +99,7 @@ if st.button("Predict"):
                 ]
                 descriptors = pd.concat([pd.read_csv(file) for file in descriptors_to_combine], axis=1)
                 descriptors.to_csv("Combined_PubChem_CDK_Klekota_app_data.csv", index=False)
+                
                 desc = pd.read_csv('Combined_PubChem_CDK_Klekota_app_data.csv')  
                 Xlist = list(pd.read_csv('Combined_PubChem_CDK_Klekota_modified.csv').columns)
                 desc_subset = desc[Xlist]
