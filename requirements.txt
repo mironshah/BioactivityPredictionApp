@@ -1,5 +1,5 @@
 pickle5
-pandad
+pandas
 subprocess
 os
 base64
