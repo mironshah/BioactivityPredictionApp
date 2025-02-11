@@ -4,4 +4,4 @@ numpy
 scikit-learn
 padelpy
 requests
-pickle5
+pickle
