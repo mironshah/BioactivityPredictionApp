@@ -1,4 +1,7 @@
 pandas
+numpy
+scikit-learn
+joblib
 subprocess
 os
 base64
