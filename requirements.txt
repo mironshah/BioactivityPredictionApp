@@ -1,7 +1,8 @@
+pickle
+pandad
+subprocess
+os
+base64
 streamlit
-pandas
-numpy
-scikit-learn
 padelpy
 requests
-pickle
