@@ -6,6 +6,9 @@ import pandas as pd
 import streamlit as st
 from padelpy import padeldescriptor
 
+os.environ["JAVA_HOME"] = r"C:\Program Files\Java\jdk1.8.0_101"
+os.environ["PATH"] += os.pathsep + os.path.join(os.environ["JAVA_HOME"], "bin")
+
 # ✅ Set Streamlit Page Config
 st.set_page_config(page_title="CholinEase - Bioactivity Prediction App", layout="centered")
 
