@@ -2,7 +2,6 @@ pandas
 numpy
 scikit-learn
 joblib
-os
 base64
 streamlit
 padelpy
