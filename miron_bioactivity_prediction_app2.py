@@ -99,4 +99,4 @@ if st.button("Predict"):
 
 #To run this app in browser, enter the following set of lines in command prompt:
 #cd C:\Users\MIRON\Desktop\Bioinfo Project
-#streamlit run miron_bioactivity_prediction_app2.py
+#streamlit run miron_bioactivity_prediction_app.py
