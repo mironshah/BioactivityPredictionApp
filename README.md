@@ -1,75 +1,71 @@
-🌟 Drug Discovery Using Machine Learning + CholinEase App 🚀
-Welcome to my project where Machine Learning meets Drug Discovery! This repository includes a comprehensive workflow for predicting the bioactivity of small molecules targeting Acetylcholinesterase (AChE) — a key enzyme in neurological disorders like Alzheimer’s disease.
+📘 Project Overview
+This project applies machine learning to identify bioactive compounds that inhibit Acetylcholinesterase (AChE), an important target in treating neurological disorders like Alzheimer’s disease and myasthenia gravis. It includes both a machine learning pipeline and a web application for predicting the bioactivity (pIC50) of chemical compounds using their SMILES notations.
 
-📌 Project Highlights
-🧪 1. Objective
-Use machine learning models to predict pIC50 values (a measure of bioactivity) for potential drug-like compounds that inhibit Acetylcholinesterase.
+🔄 Step-by-Step Workflow
+1. Data Collection
+Retrieved bioactivity data from the ChEMBL database using chembl_webresource_client.
 
-🔍 Step-by-Step Overview
-📥 2. Data Collection
-Data sourced from ChEMBL using chembl_webresource_client.
+Filtered compounds targeting human Acetylcholinesterase.
 
-Focused only on bioactivity data for human Acetylcholinesterase.
+2. Bioactivity Evaluation
+Converted IC50 values to pIC50 (logarithmic scale) for easier interpretation.
 
-⚙️ 3. Data Preprocessing
-Cleaned and curated dataset by:
+Classified compounds as active, inactive, or intermediate based on pIC50 thresholds.
 
-Removing duplicates and missing values.
+3. Data Preprocessing
+Removed missing and duplicate entries.
 
-Converting IC50 values to pIC50 for better interpretability.
+Ensured high-quality and clean dataset.
 
-Categorized compounds as active, inactive, or intermediate.
+4. Exploratory Data Analysis
+Performed Mann-Whitney U tests on Lipinski descriptors (molecular weight, logP, H-bond donors/acceptors).
 
-📊 4. Exploratory Data Analysis
-Visualized distribution of bioactivity classes and molecular properties.
+Visualized key trends using boxplots and scatter plots with Seaborn.
 
-Used Mann-Whitney U Test to find significant differences between active and inactive compounds across:
+5. Feature Engineering
+Generated molecular fingerprints using RDKit and PaDEL-Descriptor.
 
-Molecular weight
+Used fingerprints like PubChem, Klekota-Roth, and CDK Extended.
 
-logP
+6. Feature Selection
+Reduced dimensionality using variance thresholding to remove low-variance features.
 
-Hydrogen bond donors/acceptors
+7. Model Training and Selection
+Trained models: Random Forest, Support Vector Regressor (SVR), XGBoost.
 
-🤖 5. Machine Learning Workflow
-🧬 Feature Engineering
-Generated molecular descriptors and fingerprints using RDKit and PaDEL-Descriptor.
+SVR gave the best performance with R² = 0.7512 on test data.
 
-📉 Feature Selection
-Applied variance thresholding to remove low-informative features.
+8. Model Evaluation
+Evaluated models using RMSE and MAE.
 
-🏗️ Model Training
-Models trained:
+Created scatter plots to compare predicted vs actual pIC50 values.
 
-Random Forest
+🚀 Bioactivity Prediction App
+How it Works
+Users input SMILES strings of chemical compounds.
 
-Support Vector Regressor (SVR)
+The app generates molecular descriptors and predicts pIC50 using the trained model.
 
-XGBoost
+Predictions are displayed and downloadable as a CSV file.
 
-SVR gave the best results with R² = 0.7512
+Key Features
+Predicts pIC50 values for up to 100 compounds at a time.
 
-📈 Model Evaluation
-Evaluated with:
+Uses combined molecular fingerprints for better accuracy.
 
-RMSE
+Built using Streamlit for a simple and interactive UI.
 
-MAE
+Outputs are instantly downloadable for further analysis.
 
-Plotted predicted vs actual pIC50 values for visual inspection.
+🛠 Technologies Used
+Python
 
-🚀 Bioactivity Prediction App - CholinEase
-💻 Built with:
-Python, Streamlit, PaDELpy, pickle
+Machine Learning (SVR, Random Forest, XGBoost)
 
-🧠 Key Features:
-Input: SMILES notations for up to 100 compounds
+Streamlit (Web App)
 
-Output: Predicted pIC50 values in seconds
+RDKit and PaDEL (Descriptor Generation)
 
-Uses three fingerprinting methods (PubChem, Klekota-Roth, CDK Extended)
+Pickle (Model Serialization)
 
-Results downloadable in CSV format
 
-📸 App Preview:
-<p align="center"> <img src="CholinEase - Bioactivity Prediction App.pdf" alt="App Screenshot" width="600"/> </p>
