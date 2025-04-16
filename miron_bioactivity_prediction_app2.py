@@ -91,3 +91,12 @@ if st.button("Predict"):
                 desc = pd.read_csv('Combined_PubChem_CDK_Klekota_app_data.csv')  
                 Xlist = list(pd.read_csv('Combined_PubChem_CDK_Klekota_modified.csv').columns)
                 desc_subset = desc[Xlist]
+                build_model(desc_subset, manual_data)
+        else:
+            st.warning("Please enter at least one SMILES notation.")
+    else:
+        st.warning("Please enter SMILES strings to start the prediction!")
+
+#To run this app in browser, enter the following set of lines in command prompt:
+#cd C:\Users\MIRON\Desktop\Bioinfo Project
+#streamlit run miron_bioactivity_prediction_app2.py
