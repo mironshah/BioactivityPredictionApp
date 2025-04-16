@@ -72,4 +72,4 @@ Uses three fingerprinting methods (PubChem, Klekota-Roth, CDK Extended)
 Results downloadable in CSV format
 
 📸 App Preview:
-<p align="center"> <img src="drug_discovery.jpg" alt="App Screenshot" width="600"/> </p>
+<p align="center"> <img src="CholinEase - Bioactivity Prediction App.pdf" alt="App Screenshot" width="600"/> </p>
